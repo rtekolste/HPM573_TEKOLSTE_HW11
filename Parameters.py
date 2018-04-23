@@ -1,7 +1,7 @@
 from enum import Enum
 import InputData as Data
-import scr.MarkovClasses as MarkovCls
-import numpy as np
+import scr.MarkovClasses as SupportLibrary
+import ProblemOneAndTwo as P1
 
 class HealthStats(Enum):
     """ health states of patients with HIV """
@@ -9,12 +9,13 @@ class HealthStats(Enum):
     STROKE = 1
     POST_STROKE = 2
     DEATH = 3
-    BACKGROUND_DEATH = 4
+
 
 class Therapies(Enum):
     """ mono vs. combination therapy """
     NONE = 0
     ANTICOAG = 1
+
 
 class ParametersFixed():
     def __init__(self, therapy):
@@ -43,12 +44,12 @@ class ParametersFixed():
 
         # calculate transition probabilities depending of which therapy options is in use
         if therapy == Therapies.NONE:
-            self._prob_matrix = Data.TRANS_MATRIX
-            self._annualStateCosts = Data.ANNUAL_STATE_COST
+            self._prob_matrix = SupportLibrary.continuous_to_discrete(P1.RATE_MATRIX, Data.DELTA_T)
         else:
-            self._prob_matrix = calculate_prob_matrix_anticoag()
-            self._annualStateCosts = Data.ANNUAL_STATE_COST_ANTICOAG
+            self._prob_matrix = SupportLibrary.continuous_to_discrete(P1.RATE_MATRIX_ANTI_COAG, Data.DELTA_T)
 
+        print(self._prob_matrix)
+        self._annualStateCosts = Data.HEALTH_COST
         self._annualStateUtilities = Data.HEALTH_UTILITY
 
     def get_initial_health_state(self):
@@ -77,40 +78,3 @@ class ParametersFixed():
 
     def get_annual_treatment_cost(self):
         return self._annualTreatmentCost
-
-def add_background_mortality(prob_matrix):
-    rate_matrix = MarkovCls.discrete_to_continuous(prob_matrix, 1)
-    for s in HealthStats:
-        #add background rates
-        if s not in [HealthStats.DEATH, HealthStats.BACKGROUND_DEATH]:
-            rate_matrix[s.value][HealthStats.BACKGROUND_DEATH.value]\
-                = -np.log(1-Data.ANNUAL_PROB_BACKGROUND_MORT)
-
-    prob_matrix[:], p = MarkovCls.continuous_to_discrete(rate_matrix, Data.DELTA_T)
-    # print('Upper bound on the probability of two transitions within delta_t:', p)
-
-def calculate_prob_matrix_anticoag():
-    """ :returns transition probability matrix under anticoagulation use"""
-
-    # create an empty matrix populated with zeroes
-    prob_matrix = []
-    for s in HealthStats:
-        prob_matrix.append([0] * len(HealthStats))
-
-    # for all health states
-    for s in HealthStats:
-        # if the current state is post-stroke
-        if s == HealthStats.POST_STROKE:
-            # post-stoke to stroke
-            prob_matrix[s.value][HealthStats.STROKE.value]\
-                = Data.RR_STROKE*Data.TRANS_MATRIX[s.value][HealthStats.STROKE.value]
-            # post-stroke to death
-            prob_matrix[s.value][HealthStats.DEATH.value] \
-                = Data.RR_STROKE * Data .RR_BLEEDING * Data.TRANS_MATRIX[s.value][HealthStats.DEATH.value]
-            # staying in post-stroke
-            prob_matrix[s.value][s.value]\
-                = 1 - prob_matrix[s.value][HealthStats.STROKE.value] - prob_matrix[s.value][HealthStats.DEATH.value]
-        else:
-            prob_matrix[s.value] = Data.TRANS_MATRIX[s.value]
-
-    return prob_matrix

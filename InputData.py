@@ -1,25 +1,16 @@
+
 POP_SIZE = 2000     # cohort population size
 SIM_LENGTH = 50     # length of simulation (years)
 ALPHA = 0.05        # significance level for calculating confidence intervals
-DELTA_T = 1/365         # years (length of time step, how frequently you look at the patient)
+DELTA_T = 1/52         # years (length of time step, how frequently you look at the patient)
 DISCOUNT = 0.03     # annual discount rate
 
 ADD_BACKGROUND_MORT = True  # if background mortality should be added
 
 PSA_ON = False      # if probabilistic sensitivity analysis is on
 
-# transition matrix
-TRANS_MATRIX = [
-    [0.985,  0.015,   0.0,    0.0],   # Well
-    [0,      0.0,    .9,      0.1],   # Stroke
-    [0,      0.315,  0.55,    0.0],   # Post-Stroke
-    [0.0,    0.0,    0.0,     1.0],   # Dead
-    ]
-
-
-
 # annual cost of each health state
-ANNUAL_STATE_COST = [
+HEALTH_COST = [
     0,     # Well
     5000,  # Stroke (one time cost)
     200,   # Post-Stroke
@@ -57,6 +48,6 @@ RR_BLEEDING = 1.05
 
 
 NoTreatment_COST = 0
-AntiCoag_COST = 2000
+Anticoag_COST = 2000
 
 ANNUAL_PROB_BACKGROUND_MORT= 1763.8/100,000
