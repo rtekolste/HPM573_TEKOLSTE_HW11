@@ -9,6 +9,7 @@ class HealthStats(Enum):
     STROKE = 1
     POST_STROKE = 2
     DEATH = 3
+    BACKGROUND_DEATH = 4
 
 
 class Therapies(Enum):
@@ -44,9 +45,9 @@ class ParametersFixed():
 
         # calculate transition probabilities depending of which therapy options is in use
         if therapy == Therapies.NONE:
-            self._prob_matrix = SupportLibrary.continuous_to_discrete(P1.RATE_MATRIX, Data.DELTA_T)
+            self._prob_matrix, p = SupportLibrary.continuous_to_discrete(P1.RATE_MATRIX, Data.DELTA_T)
         else:
-            self._prob_matrix = SupportLibrary.continuous_to_discrete(P1.RATE_MATRIX_ANTI_COAG, Data.DELTA_T)
+            self._prob_matrix, p = SupportLibrary.continuous_to_discrete(P1.RATE_MATRIX_ANTI_COAG, Data.DELTA_T)
 
         print(self._prob_matrix)
         self._annualStateCosts = Data.HEALTH_COST

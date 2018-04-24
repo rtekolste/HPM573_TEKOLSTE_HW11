@@ -14,14 +14,16 @@ HEALTH_COST = [
     0,     # Well
     5000,  # Stroke (one time cost)
     200,   # Post-Stroke
-    0,     # Stroke Death      # Dead
+    0,     # Stroke Death
+    0#  Dead
     ]
 
 ANNUAL_STATE_COST_ANTICOAG = [
     0,     # Well
     5000,  # Stroke (one time cost)
     750,   # Post-Stroke
-    0,     # Stroke Death      # Dead
+    0,     # Stroke Death
+    0#  Dead
     ]
 
 # annual health utility of each health state
@@ -36,6 +38,7 @@ HEALTH_UTILITY = [
     1,          #Well
     0.2,        #Stroke (average time = 1 week)
     0.9,        #Post Stroke
+    0,          #Stroke Death
     0           #Death
 ]
 
