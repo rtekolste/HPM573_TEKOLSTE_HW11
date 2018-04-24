@@ -19,3 +19,4 @@ cohort2 =  MarkovCls.Cohort(
 simOutputs2 = cohort2.simulate()
 
 Support.print_comparative_outcomes(simOutputs, simOutputs2)
+print("Done")

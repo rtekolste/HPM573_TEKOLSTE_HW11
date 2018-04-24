@@ -49,7 +49,6 @@ class ParametersFixed():
         else:
             self._prob_matrix, p = SupportLibrary.continuous_to_discrete(P1.RATE_MATRIX_ANTI_COAG, Data.DELTA_T)
 
-        print(self._prob_matrix)
         self._annualStateCosts = Data.HEALTH_COST
         self._annualStateUtilities = Data.HEALTH_UTILITY
 
